@@ -1,6 +1,6 @@
 .post{
     max-width: 500px;
-    /* margin-left: 10px; */
+    margin-left: 30%;
     background-color: white;
     margin-top: 1rem;
     border: 1px solid lightgray ;
@@ -26,4 +26,22 @@
 .post-text{
     font-weight: normal;
     padding: 1rem;
+}
+
+.post_comment{
+    display: flex;
+    flex-direction: row;
+    margin: auto 0px 10px 15px;
+}
+.post_comments{
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+.comment_text{
+    flex:1;
+}
+
+.comment_button{
+    flex:0;
+    background-color: rgb(var(--ig-primary-button));
 }

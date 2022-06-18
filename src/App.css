@@ -11,6 +11,9 @@
     background-color: white;
     border-bottom: 1px solid lightgray;
     padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .app-header-img{
@@ -24,4 +27,8 @@
 .modal-form{
     display: flex;
     flex-direction: column;
+}
+
+.app_posts{
+    padding: 20px;
 }

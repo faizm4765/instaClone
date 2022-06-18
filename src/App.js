@@ -10,6 +10,7 @@ import { db }  from './fire';
 import { getAuth, createUserWithEmailAndPassword,  onAuthStateChanged, updateProfile, signOut, signInWithEmailAndPassword } from "firebase/auth";
 import { arrayRemove, collection, getDocs, onSnapshot, doc, query, QuerySnapshot } from "firebase/firestore";
 
+
 //style for modal box
 const style = {
   position: 'absolute',
@@ -37,12 +38,13 @@ function App() {
     const auth = getAuth();
     const cleanUp = onAuthStateChanged(auth , (authUser) =>{
       if(authUser){
-          console.log(authUser)
+          // console.log(authUser)
           setuser(authUser)
           if(authUser.displayName){
 
           }
           else{
+            // console.log("Setting up display name");
             updateProfile(auth.currentUser,{
                 displayName: userName
               }).then(res => console.log(res))
@@ -82,17 +84,24 @@ function App() {
     const unSub = onSnapshot(q, (querySnapshot) =>{           // fetch data from firestore in realtime
         setPosts([]); 
         querySnapshot.docs.forEach(doc => {         // returning object inside map( ) function
-        setPosts((prev) => [...prev,doc.data()])
-        console.log(doc.data());
+        const ob = {
+            id: doc.id,
+            post: doc.data()
+        }
+        setPosts((prev) => [...prev,ob])
+        // console.log(doc.data(),doc.id);
       })
     })
+    return () =>{
+      unSub();
+    }
     }
   ,[])  
 
   const signUp = (event) =>{
     event.preventDefault();
     // console.log(userName,email,password); 
-    console.log("SignedUp!!");
+    // console.log("SignedUp!!");
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -116,6 +125,7 @@ function App() {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) =>{
     //  alert("Successfully Signed In!")
+      // console.log(userCredential);
     })
     .catch((err) => alert("Invalid credntials!"))
     setOpenSignIn(false);
@@ -130,14 +140,12 @@ function App() {
       console.log("SIgnOut Error", error);
     });
   }
-
+  // console.log(user.displayName,"displayName")
   return (
     <div className="app">
       <div className = "app-header">
         <img src = "https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png" alt="instagram" className="app-header-img"></img>
-      </div> 
-      <ImageUploader/>
-      {
+        {
         user ? 
       <Button onClick={() => logOut()}>SignOut</Button>   
         :(
@@ -146,6 +154,14 @@ function App() {
               <Button onClick={() => {setOpen(true)}}>SignUp</Button>   
           </div>
       )} 
+      </div> 
+      
+      {user ? (
+        <ImageUploader userName = {user.displayName}/>
+      ): (
+        <h3>Sorry, you need to login to upload!</h3>
+      )}
+     
 
       <Modal
         open={openSignIn}
@@ -225,12 +241,13 @@ function App() {
         </form>
         </Box>
       </Modal>
-
+      <div className='app_posts'>
       {
-        posts && posts.length > 0 && posts.map((post,index) =>{
-          return <Posts key = {index} userName = {post.userName} caption = {post.caption} imageUrl = {post.imageUrl}/>
+        posts && posts.length > 0 && posts.map(({id,post}) =>{
+          return <Posts key = {id} postId = {id} userName = {post.userName} caption = {post.caption} imageUrl = {post.imageUrl}/>
         })
       }
+      </div>
      
     </div>
   );
