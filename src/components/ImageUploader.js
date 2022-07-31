@@ -4,6 +4,7 @@ import { storage,db } from '../fire';
 import { collection, addDoc } from "firebase/firestore"; 
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import "./imageUploader.css";
+import { serverTimestamp } from "firebase/firestore";
 
 function ImageUploader({userName}){
     const [caption , setCaption] = useState('');
@@ -34,11 +35,12 @@ function ImageUploader({userName}){
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadUrl) =>{
                     setImageUrl(downloadUrl);
                     console.log(userName);
+                    setProgressPercent(0);
                     const docRef = await addDoc(collection(db, "posts"), {
                         caption: caption,
                         imageUrl: downloadUrl,
                         userName: userName,
-                        // timestamp:firebase.firestore.FieldValue.serverTimestamp()
+                        // created: serverTimestamp
                       });
                 }).catch(err => console.log(err));
             } 
@@ -52,9 +54,9 @@ function ImageUploader({userName}){
         <div className='imageUploader'>
             {/* {userName} */}
             <input type = "text" placeholder='Enter caption!' value = {caption} onChange = {(e) => setCaption(e.target.value)}></input>
-            <input type="file" onChange={handleChange}></input>
+            <input type="file" key={fileName} onChange={handleChange}></input>
             {(progressPercent != 0) ? (
-               <progress id="file" value={progressPercent} max="100">  </progress>
+               <progress id="file" value={progressPercent} max="100"> {progressPercent} </progress>
             ): (
                 <></>
             )

@@ -244,7 +244,7 @@ function App() {
       <div className='app_posts'>
       {
         posts && posts.length > 0 && posts.map(({id,post}) =>{
-          return <Posts key = {id} postId = {id} userName = {post.userName} caption = {post.caption} imageUrl = {post.imageUrl}/>
+          return <Posts key = {id} postId = {id} user = {user} userName = {post.userName} caption = {post.caption} imageUrl = {post.imageUrl}/>
         })
       }
       </div>
