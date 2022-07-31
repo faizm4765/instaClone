@@ -39,9 +39,14 @@
 }
 .comment_text{
     flex:1;
+    border: none;
+    padding: 7px;
+    border-top: 1px solid lightgray;
 }
 
 .comment_button{
     flex:0;
-    background-color: rgb(var(--ig-primary-button));
+    border: none;
+    border-top: 1px solid lightgray;
+    color: #6082a3;
 }
